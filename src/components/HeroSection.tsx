@@ -1,3 +1,5 @@
+"use client";
+import Link from "next/link";
 import React from "react";
 
 const HeroSection: React.FC = React.memo(() => {
@@ -13,10 +15,12 @@ const HeroSection: React.FC = React.memo(() => {
             modern colleges.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4 lg:justify-start">
-            <button className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 rounded-lg px-8 py-3 font-semibold transition-all duration-200 hover:shadow-lg">
-              Get Started
-            </button>
-            <button className="border-border text-foreground hover:border-border/80 hover:bg-muted/20 rounded-lg border bg-transparent px-8 py-3 font-semibold transition-all duration-200">
+            <Link href="/sign-up">
+              <button className="bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-primary/30 cursor-pointer rounded-lg px-8 py-3 font-semibold transition-all duration-200 hover:shadow-lg">
+                Get Started
+              </button>
+            </Link>
+            <button className="border-border text-foreground hover:border-border/80 hover:bg-muted dark:hover:bg-muted/20 cursor-pointer rounded-lg border bg-transparent px-8 py-3 font-semibold transition-all duration-200">
               View Demo
             </button>
           </div>
@@ -55,7 +59,7 @@ const HeroSection: React.FC = React.memo(() => {
                       fill="none"
                       stroke="hsl(var(--border))"
                       strokeWidth="0.5"
-                      opacity="0.3"
+                      opacity="0.5"
                     />
                   </pattern>
                 </defs>
@@ -69,7 +73,7 @@ const HeroSection: React.FC = React.memo(() => {
                   y2="20"
                   stroke="hsl(var(--border))"
                   strokeWidth="0.5"
-                  opacity="0.5"
+                  opacity="0.7"
                 />
                 <line
                   x1="0"
@@ -78,7 +82,7 @@ const HeroSection: React.FC = React.memo(() => {
                   y2="40"
                   stroke="hsl(var(--border))"
                   strokeWidth="0.5"
-                  opacity="0.5"
+                  opacity="0.7"
                 />
                 <line
                   x1="0"
@@ -87,7 +91,7 @@ const HeroSection: React.FC = React.memo(() => {
                   y2="60"
                   stroke="hsl(var(--border))"
                   strokeWidth="0.5"
-                  opacity="0.5"
+                  opacity="0.7"
                 />
                 <line
                   x1="0"
@@ -96,13 +100,13 @@ const HeroSection: React.FC = React.memo(() => {
                   y2="80"
                   stroke="hsl(var(--border))"
                   strokeWidth="0.5"
-                  opacity="0.5"
+                  opacity="0.7"
                 />
 
                 {/* Attendance line - Present students (more variance, corner-centric) */}
                 <path
-                  d="M 0 75 L 20 85 L 40 65 L 60 90 L 80 55 L 100 70 L 120 45 L 140 80 L 160 35 L 180 60 L 200 25 L 220 75 L 240 40 L 260 55 L 280 20 L 300 65 L 320 30"
-                  stroke="hsl(var(--primary))"
+                  d="M 0 75 L 40 65 L 80 55 L 120 45 L 160 35 L 200 25 L 240 40 L 280 20 L 320 30"
+                  stroke="hsl(var(--foreground))"
                   fill="none"
                   strokeWidth="3"
                   strokeLinecap="square"
@@ -111,8 +115,8 @@ const HeroSection: React.FC = React.memo(() => {
 
                 {/* Expected attendance line (more variance) */}
                 <path
-                  d="M 0 70 L 20 68 L 40 75 L 60 62 L 80 78 L 100 55 L 120 72 L 140 48 L 160 68 L 180 52 L 200 75 L 220 45 L 240 70 L 260 50 L 280 65 L 300 55 L 320 60"
-                  stroke="hsl(var(--muted-foreground))"
+                  d="M 0 70 L 40 75 L 80 78 L 120 72 L 160 68 L 200 75 L 240 70 L 280 65 L 320 60"
+                  stroke="hsl(var(--chart-2))"
                   fill="none"
                   strokeWidth="2"
                   strokeLinecap="square"
@@ -125,7 +129,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="0"
                   cy="75"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -133,7 +137,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="40"
                   cy="65"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -141,7 +145,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="80"
                   cy="55"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -149,7 +153,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="120"
                   cy="45"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -157,7 +161,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="160"
                   cy="35"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -165,7 +169,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="200"
                   cy="25"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -173,7 +177,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="240"
                   cy="40"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -181,7 +185,7 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="280"
                   cy="20"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
@@ -189,16 +193,16 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="320"
                   cy="30"
                   r="2.5"
-                  fill="hsl(var(--primary))"
+                  fill="hsl(var(--foreground))"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
                 />
 
                 {/* Fill area under the attendance line */}
                 <path
-                  d="M 0 75 L 20 85 L 40 65 L 60 90 L 80 55 L 100 70 L 120 45 L 140 80 L 160 35 L 180 60 L 200 25 L 220 75 L 240 40 L 260 55 L 280 20 L 300 65 L 320 30 L 320 100 L 0 100 Z"
-                  fill="hsl(var(--primary))"
-                  fillOpacity="0.08"
+                  d="M 0 75 L 40 65 L 80 55 L 120 45 L 160 35 L 200 25 L 240 40 L 280 20 L 320 30 L 320 100 L 0 100 Z"
+                  fill="hsl(var(--foreground))"
+                  fillOpacity="0.1"
                 />
 
                 {/* Legend */}
@@ -208,7 +212,7 @@ const HeroSection: React.FC = React.memo(() => {
                     y1="0"
                     x2="15"
                     y2="0"
-                    stroke="hsl(var(--primary))"
+                    stroke="hsl(var(--graph-color))"
                     strokeWidth="3"
                     strokeLinecap="square"
                   />
@@ -216,7 +220,7 @@ const HeroSection: React.FC = React.memo(() => {
                     x="20"
                     y="4"
                     fontSize="10"
-                    fill="hsl(var(--foreground))"
+                    fill="hsl(var(--graph-color))"
                   >
                     Present
                   </text>
@@ -227,7 +231,7 @@ const HeroSection: React.FC = React.memo(() => {
                     y1="0"
                     x2="15"
                     y2="0"
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="hsl(var(--chart-2))"
                     strokeWidth="2"
                     strokeDasharray="3,3"
                     strokeLinecap="square"
@@ -236,7 +240,7 @@ const HeroSection: React.FC = React.memo(() => {
                     x="20"
                     y="4"
                     fontSize="10"
-                    fill="hsl(var(--foreground))"
+                    fill="hsl(var(--graph-color))"
                   >
                     Expected
                   </text>

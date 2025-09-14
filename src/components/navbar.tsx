@@ -1,3 +1,6 @@
+'use client'
+
+import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { ModeToggle } from "~/components/mode-toggle";
 import {
@@ -7,8 +10,11 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
+import { Button } from "./ui/button";
 
 export function Navbar() {
+  const { isSignedIn } = useUser();
+
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
@@ -42,9 +48,37 @@ export function Navbar() {
           </NavigationMenu>
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <nav className="flex items-center">
+          <div className="flex items-center gap-4 px-4 sm:px-6">
+
+            {!isSignedIn ? (
+              <div>
+
+                <div className="hidden md:flex items-center gap-4">
+                  <Button asChild>
+                    <Link href="/sign-in">Login</Link>
+                  </Button>
+                  <Button variant={"ghost"} asChild>
+                    <Link href="/sign-up">Sign Up</Link>
+                  </Button>
+                </div>
+
+                <div className="md:hidden">
+                  <Button asChild size={"sm"}>
+                    <Link href="/sign-in">Login</Link>
+                  </Button>
+                  <Button variant={"ghost"} asChild size={"sm"}>
+                    <Link href="/sign-up">Sign Up</Link>
+                  </Button>
+                </div>
+
+              </div>
+            ) : (
+                <div className="flex items-center gap-4">
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              )}
             <ModeToggle />
-          </nav>
+          </div>
         </div>
       </div>
     </header>
