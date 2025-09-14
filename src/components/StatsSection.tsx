@@ -2,23 +2,23 @@ import React from "react";
 
 const StatsSection: React.FC = React.memo(() => {
   return (
-    <section className="mt-32 flex flex-col items-center justify-between gap-8 rounded-2xl border border-gray-800 bg-[#1C1E2A]/50 p-12 lg:flex-row lg:gap-16">
+    <section className="border-border bg-card/50 mt-32 flex flex-col items-center justify-between gap-8 rounded-2xl border p-12 lg:flex-row lg:gap-16">
       <div className="grid w-full grid-cols-1 gap-10 text-center sm:grid-cols-3 lg:text-left">
         <div>
-          <p className="text-4xl font-bold text-sky-400">95% Faster</p>
-          <p className="mt-2 text-gray-400">to manual roll calls</p>
+          <p className="text-primary text-4xl font-bold">95% Faster</p>
+          <p className="text-muted-foreground mt-2">to manual roll calls</p>
         </div>
         <div>
-          <p className="text-4xl font-bold text-sky-400">100%</p>
-          <p className="mt-2 text-gray-400">Accuracy</p>
+          <p className="text-primary text-4xl font-bold">100%</p>
+          <p className="text-muted-foreground mt-2">Accuracy</p>
         </div>
         <div>
-          <p className="text-4xl font-bold text-sky-400">5,000+</p>
-          <p className="mt-2 text-gray-400">Students</p>
+          <p className="text-primary text-4xl font-bold">5,000+</p>
+          <p className="text-muted-foreground mt-2">Students</p>
         </div>
       </div>
       <div className="flex-shrink-0">
-        <button className="rounded-lg bg-sky-500 px-10 py-4 font-semibold whitespace-nowrap transition-all duration-200 hover:bg-sky-600 hover:shadow-lg hover:shadow-sky-500/30">
+        <button className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/30 rounded-lg px-10 py-4 font-semibold whitespace-nowrap transition-all duration-200 hover:shadow-lg">
           Request Demo
         </button>
       </div>

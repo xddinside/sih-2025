@@ -9,11 +9,11 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = React.memo(
   ({ icon, title, description }) => {
     return (
-      <div className="flex items-center space-x-4 rounded-lg border border-gray-700/50 bg-gray-800/30 p-6">
-        <div className="flex-shrink-0 rounded-md bg-gray-900 p-3">{icon}</div>
+      <div className="border-border/50 bg-card/30 flex items-center space-x-4 rounded-lg border p-6">
+        <div className="bg-muted flex-shrink-0 rounded-md p-3">{icon}</div>
         <div>
-          <h3 className="font-semibold">{title}</h3>
-          <p className="text-sm text-gray-400">{description}</p>
+          <h3 className="text-foreground font-semibold">{title}</h3>
+          <p className="text-muted-foreground text-sm">{description}</p>
         </div>
       </div>
     );

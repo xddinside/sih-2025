@@ -2,8 +2,8 @@ import QRcode from "~/components/QRcode";
 
 export default function ShowQR() {
   return (
-    <div className="flex items-center justify-center h-[100vh]">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
       <QRcode data={"https://flavorflow-ai.vercel.app"} />
     </div>
-  )
+  );
 }
