@@ -57,9 +57,10 @@ const HeroSection: React.FC = React.memo(() => {
                     <path
                       d="M 32 0 L 0 0 0 20"
                       fill="none"
-                      stroke="hsl(var(--border))"
+                      stroke="currentColor"
                       strokeWidth="0.5"
-                      opacity="0.5"
+                      opacity="0.3"
+                      className="text-foreground"
                     />
                   </pattern>
                 </defs>
@@ -71,57 +72,64 @@ const HeroSection: React.FC = React.memo(() => {
                   y1="20"
                   x2="320"
                   y2="20"
-                  stroke="hsl(var(--border))"
+                  stroke="currentColor"
                   strokeWidth="0.5"
-                  opacity="0.7"
+                  opacity="0.5"
+                  className="text-foreground"
                 />
                 <line
                   x1="0"
                   y1="40"
                   x2="320"
                   y2="40"
-                  stroke="hsl(var(--border))"
+                  stroke="currentColor"
                   strokeWidth="0.5"
-                  opacity="0.7"
+                  opacity="0.5"
+                  className="text-foreground"
                 />
                 <line
                   x1="0"
                   y1="60"
                   x2="320"
                   y2="60"
-                  stroke="hsl(var(--border))"
+                  stroke="currentColor"
                   strokeWidth="0.5"
-                  opacity="0.7"
+                  opacity="0.5"
+                  className="text-foreground"
                 />
                 <line
                   x1="0"
                   y1="80"
                   x2="320"
                   y2="80"
-                  stroke="hsl(var(--border))"
+                  stroke="currentColor"
                   strokeWidth="0.5"
-                  opacity="0.7"
+                  opacity="0.5"
+                  className="text-foreground"
                 />
 
-                {/* Attendance line - Present students (more variance, corner-centric) */}
+                {/* Attendance line - Present students */}
                 <path
                   d="M 0 75 L 40 65 L 80 55 L 120 45 L 160 35 L 200 25 L 240 40 L 280 20 L 320 30"
-                  stroke="hsl(var(--foreground))"
+                  stroke="currentColor"
                   fill="none"
                   strokeWidth="3"
                   strokeLinecap="square"
                   strokeLinejoin="miter"
+                  className="text-foreground"
                 />
 
-                {/* Expected attendance line (more variance) */}
+                {/* Expected attendance line */}
                 <path
                   d="M 0 70 L 40 75 L 80 78 L 120 72 L 160 68 L 200 75 L 240 70 L 280 65 L 320 60"
-                  stroke="hsl(var(--chart-2))"
+                  stroke="currentColor"
                   fill="none"
                   strokeWidth="2"
                   strokeLinecap="square"
                   strokeLinejoin="miter"
                   strokeDasharray="5,5"
+                  opacity="0.7"
+                  className="text-foreground"
                 />
 
                 {/* Data points for present students */}
@@ -129,80 +137,90 @@ const HeroSection: React.FC = React.memo(() => {
                   cx="0"
                   cy="75"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="40"
                   cy="65"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="80"
                   cy="55"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="120"
                   cy="45"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="160"
                   cy="35"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="200"
                   cy="25"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="240"
                   cy="40"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="280"
                   cy="20"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
                 <circle
                   cx="320"
                   cy="30"
                   r="2.5"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   stroke="hsl(var(--background))"
                   strokeWidth="1"
+                  className="text-foreground"
                 />
 
                 {/* Fill area under the attendance line */}
                 <path
                   d="M 0 75 L 40 65 L 80 55 L 120 45 L 160 35 L 200 25 L 240 40 L 280 20 L 320 30 L 320 100 L 0 100 Z"
-                  fill="hsl(var(--foreground))"
+                  fill="currentColor"
                   fillOpacity="0.1"
+                  className="text-foreground"
                 />
 
                 {/* Legend */}
@@ -212,15 +230,17 @@ const HeroSection: React.FC = React.memo(() => {
                     y1="0"
                     x2="15"
                     y2="0"
-                    stroke="hsl(var(--graph-color))"
+                    stroke="currentColor"
                     strokeWidth="3"
                     strokeLinecap="square"
+                    className="text-foreground"
                   />
                   <text
                     x="20"
                     y="4"
                     fontSize="10"
-                    fill="hsl(var(--graph-color))"
+                    fill="currentColor"
+                    className="text-foreground"
                   >
                     Present
                   </text>
@@ -231,16 +251,19 @@ const HeroSection: React.FC = React.memo(() => {
                     y1="0"
                     x2="15"
                     y2="0"
-                    stroke="hsl(var(--chart-2))"
+                    stroke="currentColor"
                     strokeWidth="2"
                     strokeDasharray="3,3"
                     strokeLinecap="square"
+                    opacity="0.7"
+                    className="text-foreground"
                   />
                   <text
                     x="20"
                     y="4"
                     fontSize="10"
-                    fill="hsl(var(--graph-color))"
+                    fill="currentColor"
+                    className="text-foreground"
                   >
                     Expected
                   </text>
