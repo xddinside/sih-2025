@@ -13,10 +13,10 @@ const HeroSection: React.FC = React.memo(() => {
             modern colleges.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4 lg:justify-start">
-            <button className="transform rounded-md bg-sky-500 px-8 py-3 font-semibold shadow-lg shadow-sky-500/20 transition-transform hover:scale-105 hover:bg-sky-600">
+            <button className="rounded-lg bg-sky-500 px-8 py-3 font-semibold transition-all duration-200 hover:bg-sky-600 hover:shadow-lg hover:shadow-sky-500/30">
               Get Started
             </button>
-            <button className="rounded-md border border-gray-700 bg-transparent px-8 py-3 font-semibold transition-colors hover:bg-gray-800/50">
+            <button className="rounded-lg border border-gray-600 bg-transparent px-8 py-3 font-semibold transition-all duration-200 hover:border-gray-500 hover:bg-gray-800/20">
               View Demo
             </button>
           </div>

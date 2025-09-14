@@ -18,7 +18,7 @@ const StatsSection: React.FC = React.memo(() => {
         </div>
       </div>
       <div className="flex-shrink-0">
-        <button className="transform rounded-md bg-sky-500 px-10 py-4 font-semibold whitespace-nowrap shadow-lg shadow-sky-500/20 transition-transform hover:scale-105 hover:bg-sky-600">
+        <button className="rounded-lg bg-sky-500 px-10 py-4 font-semibold whitespace-nowrap transition-all duration-200 hover:bg-sky-600 hover:shadow-lg hover:shadow-sky-500/30">
           Request Demo
         </button>
       </div>

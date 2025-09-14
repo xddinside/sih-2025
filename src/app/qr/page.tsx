@@ -1,11 +1,9 @@
-import Image from "next/image"
+import QRcode from "~/components/QRcode";
 
-export default function Qr() {
-  const url = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://flavorflow-ai.vercel.app`
-
+export default function ShowQR() {
   return (
-    <div>
-      <Image src={url} alt="qr code" width={150} height={150}/>
+    <div className="flex items-center justify-center h-[100vh]">
+      <QRcode data={"https://flavorflow-ai.vercel.app"} />
     </div>
   )
 }
