@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "~/components/theme-provider";
 import { Navbar } from "~/components/navbar";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import { shadcn } from "@clerk/themes"
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
       <body>
-        <ClerkProvider>
+        <ClerkProvider appearance={{baseTheme: shadcn,}}>
           <ConvexClientProvider>
             <ThemeProvider
               attribute="class"
