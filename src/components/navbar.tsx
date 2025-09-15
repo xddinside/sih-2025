@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import { Authenticated, Unauthenticated } from "convex/react";
 
 export function Navbar() {
-  const { isSignedIn } = useUser();
+  useUser();
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
@@ -37,12 +37,14 @@ export function Navbar() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link
-                    href="/qr"
-                    className={`${navigationMenuTriggerStyle()} hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors`}
-                  >
-                    QR Code
-                  </Link>
+                  <Authenticated>
+                    <Link
+                      href="/dashboard"
+                      className={`${navigationMenuTriggerStyle()} hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors`}
+                    >
+                      Dashboard
+                    </Link>
+                  </Authenticated>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -50,11 +52,9 @@ export function Navbar() {
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <div className="flex items-center gap-4 px-4 sm:px-6">
-
             <Unauthenticated>
               <div>
-
-                <div className="hidden md:flex items-center gap-4">
+                <div className="hidden items-center gap-4 md:flex">
                   <Button asChild>
                     <Link href="/sign-in">Login</Link>
                   </Button>
@@ -71,13 +71,12 @@ export function Navbar() {
                     <Link href="/sign-up">Sign Up</Link>
                   </Button>
                 </div>
-
               </div>
             </Unauthenticated>
 
             <Authenticated>
               <div className="flex items-center gap-4">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
             </Authenticated>
 

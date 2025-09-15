@@ -7,4 +7,4 @@
 - [x] generate QRs to a link
 - [x] setup clerk and convex.
 - [x] connect clerk with convex
-- [ ] make the QR redirect on scan, to a unique session url with a token that'll run a convex mutation
+- [x] make the QR redirect on scan, to a unique session url with a token that'll run a convex mutation
