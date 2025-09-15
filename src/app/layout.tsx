@@ -22,10 +22,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ConvexClientProvider>
-      <ClerkProvider>
-        <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
-          <body>
+    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
+      <body>
+        <ClerkProvider>
+          <ConvexClientProvider>
             <ThemeProvider
               attribute="class"
               defaultTheme="system"
@@ -35,9 +35,9 @@ export default function RootLayout({
               <Navbar />
               {children}
             </ThemeProvider>
-          </body>
-        </html>
-      </ClerkProvider>
-    </ConvexClientProvider>
+          </ConvexClientProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

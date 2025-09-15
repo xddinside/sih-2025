@@ -11,6 +11,7 @@ import {
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
 import { Button } from "./ui/button";
+import { Authenticated, Unauthenticated } from "convex/react";
 
 export function Navbar() {
   const { isSignedIn } = useUser();
@@ -50,7 +51,7 @@ export function Navbar() {
         <div className="ml-auto flex items-center space-x-4">
           <div className="flex items-center gap-4 px-4 sm:px-6">
 
-            {!isSignedIn ? (
+            <Unauthenticated>
               <div>
 
                 <div className="hidden md:flex items-center gap-4">
@@ -72,11 +73,14 @@ export function Navbar() {
                 </div>
 
               </div>
-            ) : (
-                <div className="flex items-center gap-4">
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              )}
+            </Unauthenticated>
+
+            <Authenticated>
+              <div className="flex items-center gap-4">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </Authenticated>
+
             <ModeToggle />
           </div>
         </div>
