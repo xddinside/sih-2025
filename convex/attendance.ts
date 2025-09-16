@@ -342,3 +342,32 @@ export const updateUserRole = mutation({
     return { success: true };
   },
 });
+
+// Get attendance records for the logged-in student
+export const getStudentAttendance = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    const records = await ctx.db
+      .query("attendanceRecords")
+      .withIndex("by_student_session", (q) => q.eq("studentId", identity.subject))
+      .collect();
+
+    const recordsWithSessionInfo = await Promise.all(
+      records.map(async (record) => {
+        const session = await ctx.db.get(record.sessionId);
+        return {
+          ...record,
+          sessionName: session?.sessionName,
+        };
+      }),
+    );
+
+    return recordsWithSessionInfo.sort((a, b) => b.markedAt - a.markedAt);
+  },
+});
+
+

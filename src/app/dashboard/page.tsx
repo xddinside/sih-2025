@@ -1,3 +1,5 @@
+// src/app/dashboard/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -30,6 +32,10 @@ export default function DashboardPage() {
     api.attendance.getCurrentUser,
     isSignedIn ? undefined : "skip",
   );
+  const studentAttendance = useQuery(
+    api.attendance.getStudentAttendance,
+    isSignedIn && currentUser?.role === "student" ? undefined : "skip",
+  );
   const createLecture = useMutation(api.attendance.createLecture);
   const syncUserProfile = useMutation(api.attendance.syncUserProfile);
 
@@ -40,7 +46,7 @@ export default function DashboardPage() {
         clerkId: user.id,
         email: user.primaryEmailAddress?.emailAddress ?? "",
         name:
-          user.fullName ??
+        user.fullName ??
           `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
       });
     }
@@ -130,6 +136,7 @@ export default function DashboardPage() {
               <Button
                 type="submit"
                 disabled={!newLectureName.trim() || isCreatingLecture}
+                className="cursor-pointer"
               >
                 {isCreatingLecture ? "Creating..." : "Create Lecture"}
               </Button>
@@ -156,6 +163,7 @@ export default function DashboardPage() {
                     <Button
                       onClick={() => setSessionLecture(lecture)}
                       disabled={!!sessionLecture}
+                      className="cursor-pointer"
                     >
                       Start Session
                     </Button>
@@ -163,19 +171,43 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">
-                You haven&apos;t created any lectures yet.
-              </p>
-            )}
+                <p className="text-muted-foreground">
+                  You haven&apos;t created any lectures yet.
+                </p>
+              )}
           </div>
         </div>
       )}
 
       {currentUser?.role === "student" && (
         <div>
-          <p className="text-muted-foreground">
-            Student dashboard coming soon!
-          </p>
+          <h2 className="mb-4 text-2xl font-bold">Your Attendance</h2>
+          {studentAttendance && studentAttendance.length > 0 ? (
+            <div className="bg-card rounded-lg border">
+              <table className="w-full text-left">
+                <thead className="border-b">
+                  <tr>
+                    <th className="p-4">Lecture</th>
+                    <th className="p-4">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {studentAttendance.map((record) => (
+                    <tr key={record._id} className="border-b">
+                      <td className="p-4">{record.sessionName}</td>
+                      <td className="p-4">
+                        {new Date(record.markedAt).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+              <p className="text-muted-foreground">
+                You haven&apos;t marked attendance for any lectures yet.
+              </p>
+            )}
         </div>
       )}
     </div>
