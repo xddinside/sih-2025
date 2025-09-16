@@ -16,11 +16,20 @@ export default function DashboardPage() {
 
   // State for the UI
   const [newLectureName, setNewLectureName] = useState("");
-  const [sessionLecture, setSessionLecture] = useState<Doc<"lectures"> | null>(null);
+  const [sessionLecture, setSessionLecture] = useState<Doc<"lectures"> | null>(
+    null,
+  );
+  const [isCreatingLecture, setIsCreatingLecture] = useState(false);
 
   // Convex hooks
-  const lectures = useQuery(api.attendance.getAllLectures, isSignedIn ? undefined : "skip");
-  const currentUser = useQuery(api.attendance.getCurrentUser, isSignedIn ? undefined : "skip");
+  const lectures = useQuery(
+    api.attendance.getAllLectures,
+    isSignedIn ? undefined : "skip",
+  );
+  const currentUser = useQuery(
+    api.attendance.getCurrentUser,
+    isSignedIn ? undefined : "skip",
+  );
   const createLecture = useMutation(api.attendance.createLecture);
   const syncUserProfile = useMutation(api.attendance.syncUserProfile);
 
@@ -30,7 +39,9 @@ export default function DashboardPage() {
       syncUserProfile({
         clerkId: user.id,
         email: user.primaryEmailAddress?.emailAddress ?? "",
-        name: user.fullName ?? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+        name:
+          user.fullName ??
+          `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
       });
     }
   }, [user, isSignedIn, currentUser, syncUserProfile]);
@@ -46,11 +57,14 @@ export default function DashboardPage() {
     e.preventDefault();
     if (!newLectureName.trim()) return;
 
+    setIsCreatingLecture(true);
     try {
       await createLecture({ name: newLectureName.trim() });
       setNewLectureName(""); // Clear input
     } catch (error) {
       console.error("Failed to create lecture:", error);
+    } finally {
+      setIsCreatingLecture(false);
     }
   };
 
@@ -80,9 +94,14 @@ export default function DashboardPage() {
           {/* Section to create a QR code session */}
           {sessionLecture && (
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold">Current Attendance Session</h2>
-                <Button variant="outline" onClick={() => setSessionLecture(null)}>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-2xl font-bold">
+                  Current Attendance Session
+                </h2>
+                <Button
+                  variant="outline"
+                  onClick={() => setSessionLecture(null)}
+                >
                   Close
                 </Button>
               </div>
@@ -96,8 +115,11 @@ export default function DashboardPage() {
 
           {/* Section to create a new lecture */}
           <div className="bg-card rounded-lg border p-6">
-            <h2 className="text-xl font-semibold mb-4">Create a New Lecture</h2>
-            <form onSubmit={handleCreateLecture} className="flex items-center gap-4">
+            <h2 className="mb-4 text-xl font-semibold">Create a New Lecture</h2>
+            <form
+              onSubmit={handleCreateLecture}
+              className="flex items-center gap-4"
+            >
               <Input
                 type="text"
                 placeholder="E.g., Week 3: State Management"
@@ -105,8 +127,11 @@ export default function DashboardPage() {
                 onChange={(e) => setNewLectureName(e.target.value)}
                 className="flex-grow"
               />
-              <Button type="submit" disabled={!newLectureName.trim() || createLecture.isLoading}>
-                {createLecture.isLoading ? "Creating..." : "Create Lecture"}
+              <Button
+                type="submit"
+                disabled={!newLectureName.trim() || isCreatingLecture}
+              >
+                {isCreatingLecture ? "Creating..." : "Create Lecture"}
               </Button>
             </form>
           </div>
@@ -117,29 +142,40 @@ export default function DashboardPage() {
             {lectures && lectures.length > 0 ? (
               <div className="space-y-4">
                 {lectures.map((lecture) => (
-                  <div key={lecture._id} className="bg-card rounded-lg border p-4 flex justify-between items-center">
+                  <div
+                    key={lecture._id}
+                    className="bg-card flex items-center justify-between rounded-lg border p-4"
+                  >
                     <div>
                       <h3 className="font-semibold">{lecture.name}</h3>
                       <p className="text-muted-foreground text-sm">
-                        Created: {new Date(lecture.createdAt).toLocaleDateString()}
+                        Created:{" "}
+                        {new Date(lecture.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <Button onClick={() => setSessionLecture(lecture)} disabled={!!sessionLecture}>
+                    <Button
+                      onClick={() => setSessionLecture(lecture)}
+                      disabled={!!sessionLecture}
+                    >
                       Start Session
                     </Button>
                   </div>
                 ))}
               </div>
             ) : (
-                <p className="text-muted-foreground">You haven't created any lectures yet.</p>
-              )}
+              <p className="text-muted-foreground">
+                You haven't created any lectures yet.
+              </p>
+            )}
           </div>
         </div>
       )}
 
       {currentUser?.role === "student" && (
         <div>
-          <p className="text-muted-foreground">Student dashboard coming soon!</p>
+          <p className="text-muted-foreground">
+            Student dashboard coming soon!
+          </p>
         </div>
       )}
     </div>

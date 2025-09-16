@@ -24,10 +24,12 @@ export default function AttendanceQR({
     expiresAt: number;
     sessionId: string;
   } | null>(null);
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
 
   const createSession = useMutation(api.attendance.createAttendanceSession);
 
   const handleCreateSession = async () => {
+    setIsCreatingSession(true);
     try {
       const result = await createSession({
         sessionName,
@@ -43,6 +45,8 @@ export default function AttendanceQR({
     } catch (error) {
       console.error("Failed to create attendance session:", error);
       alert("Failed to create attendance session. Please try again.");
+    } finally {
+      setIsCreatingSession(false);
     }
   };
 
@@ -66,8 +70,12 @@ export default function AttendanceQR({
             Duration: {durationMinutes} minutes
           </p>
         </div>
-        <Button onClick={handleCreateSession} className="w-full" disabled={createSession.isLoading}>
-          {createSession.isLoading ? "Generating..." : "Generate QR Code"}
+        <Button
+          onClick={handleCreateSession}
+          className="w-full"
+          disabled={isCreatingSession}
+        >
+          {isCreatingSession ? "Generating..." : "Generate QR Code"}
         </Button>
       </div>
     );
