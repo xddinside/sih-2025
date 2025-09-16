@@ -1,15 +1,15 @@
 "use client";
 
 import { useQRCode } from "next-qrcode";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Button } from "./ui/button";
-import type { Id } from "convex/_generated/dataModel"; // Import the Id type
+import type { Id } from "convex/_generated/dataModel";
 
 interface AttendanceQRProps {
   sessionName: string;
-  lectureId: Id<"lectures">; // Use the specific Id type here
+  lectureId: Id<"lectures">;
   durationMinutes?: number;
 }
 
@@ -22,18 +22,44 @@ export default function AttendanceQR({
   const [sessionData, setSessionData] = useState<{
     token: string;
     expiresAt: number;
-    sessionId: string;
+    sessionId: Id<"attendanceSessions">;
   } | null>(null);
   const [isCreatingSession, setIsCreatingSession] = useState(false);
 
   const createSession = useMutation(api.attendance.createAttendanceSession);
+  const refreshSession = useMutation(api.attendance.refreshSessionToken);
+
+  useEffect(() => {
+    if (!sessionData) return;
+
+    const handler = () => {
+      void (async () => {
+        if (Date.now() < sessionData.expiresAt) {
+          try {
+            const result = await refreshSession({
+              sessionId: sessionData.sessionId,
+            });
+            setSessionData((prev) =>
+              prev ? { ...prev, token: result.token } : null,
+            );
+          } catch (error) {
+            console.error("Failed to refresh session token:", error);
+          }
+        }
+      })();
+    };
+
+    const timer = setInterval(handler, 30000); // 30 seconds
+
+    return () => clearInterval(timer);
+  }, [sessionData, refreshSession]);
 
   const handleCreateSession = async () => {
     setIsCreatingSession(true);
     try {
       const result = await createSession({
         sessionName,
-        lectureId, // This will now be correctly typed
+        lectureId,
         durationMinutes,
       });
 

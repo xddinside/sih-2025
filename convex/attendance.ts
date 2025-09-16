@@ -52,6 +52,34 @@ export const createAttendanceSession = mutation({
   },
 });
 
+// Refresh the token for an existing attendance session
+export const refreshSessionToken = mutation({
+  args: {
+    sessionId: v.id("attendanceSessions"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const session = await ctx.db.get(args.sessionId);
+
+    if (!session || session.facultyId !== identity.subject) {
+      throw new ConvexError("Unauthorized");
+    }
+
+    if (!session.isActive || Date.now() > session.expiresAt) {
+      throw new ConvexError("Session has expired");
+    }
+
+    const token = generateSecureToken();
+    await ctx.db.patch(args.sessionId, { token });
+
+    return { token };
+  },
+});
+
 // Create a new lecture
 export const createLecture = mutation({
   args: {
@@ -98,7 +126,6 @@ export const getAllLectures = query({
     return lectures;
   },
 });
-
 
 // Mark attendance using token (Students)
 export const markAttendance = mutation({
@@ -224,7 +251,6 @@ export const getAttendanceRecords = query({
   },
 });
 
-
 // Get attendance sessions for a faculty member
 export const getFacultySessions = query({
   handler: async (ctx) => {
@@ -243,7 +269,6 @@ export const getFacultySessions = query({
   },
 });
 
-
 // Sync user profile from Clerk
 export const syncUserProfile = mutation({
   args: {
@@ -257,15 +282,23 @@ export const syncUserProfile = mutation({
     department: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Check if user already exists
     const existingUser = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
       .first();
 
     if (existingUser) {
+      // Define a specific, partial type for the patch data
+      type UserPatchData = Partial<{
+        email: string;
+        name: string;
+        role: "student" | "faculty" | "admin";
+        studentId: string;
+        department: string;
+      }>;
+
       // Update existing user
-      const updateData: any = {
+      const updateData: UserPatchData = {
         email: args.email,
         name: args.name,
         studentId: args.studentId,
@@ -277,8 +310,18 @@ export const syncUserProfile = mutation({
       await ctx.db.patch(existingUser._id, updateData);
       return existingUser._id;
     } else {
+      // Define a specific type for the insert data
+      type UserInsertData = {
+        clerkId: string;
+        email: string;
+        name: string;
+        role?: "student" | "faculty" | "admin";
+        studentId?: string;
+        department?: string;
+      };
+
       // Create new user
-      const userData: any = {
+      const userData: UserInsertData = {
         clerkId: args.clerkId,
         email: args.email,
         name: args.name,
@@ -353,7 +396,9 @@ export const getStudentAttendance = query({
 
     const records = await ctx.db
       .query("attendanceRecords")
-      .withIndex("by_student_session", (q) => q.eq("studentId", identity.subject))
+      .withIndex("by_student_session", (q) =>
+        q.eq("studentId", identity.subject),
+      )
       .collect();
 
     const recordsWithSessionInfo = await Promise.all(
@@ -369,5 +414,3 @@ export const getStudentAttendance = query({
     return recordsWithSessionInfo.sort((a, b) => b.markedAt - a.markedAt);
   },
 });
-
-
