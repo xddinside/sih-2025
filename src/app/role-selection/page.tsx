@@ -60,7 +60,7 @@ export default function RoleSelectionPage() {
 
         <div className="mx-auto grid max-w-2xl gap-8 md:grid-cols-2">
           {/* Student Card */}
-          <div className="border-border/50 bg-card/30 hover:bg-card/50 cursor-pointer rounded-lg border p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+          <div className="border-border/50 bg-card/30 hover:bg-card/50 rounded-lg border p-8 shadow-sm transition-all duration-300 hover:shadow-md">
             <div className="pb-6 text-center">
               <div className="bg-muted mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
                 <GraduationCap className="text-primary h-10 w-10" />
@@ -76,7 +76,7 @@ export default function RoleSelectionPage() {
               <Button
                 onClick={() => handleRoleSelection("student")}
                 disabled={isLoading}
-                className="w-full"
+                className="w-full cursor-pointer"
                 size="lg"
               >
                 {isLoading ? "Setting up..." : "Continue as Student"}
@@ -85,7 +85,7 @@ export default function RoleSelectionPage() {
           </div>
 
           {/* Faculty Card */}
-          <div className="border-border/50 bg-card/30 hover:bg-card/50 cursor-pointer rounded-lg border p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+          <div className="border-border/50 bg-card/30 hover:bg-card/50 rounded-lg border p-8 shadow-sm transition-all duration-300 hover:shadow-md">
             <div className="pb-6 text-center">
               <div className="bg-muted mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
                 <Users className="text-primary h-10 w-10" />
@@ -101,7 +101,7 @@ export default function RoleSelectionPage() {
               <Button
                 onClick={() => handleRoleSelection("faculty")}
                 disabled={isLoading}
-                className="w-full"
+                className="w-full cursor-pointer"
                 size="lg"
               >
                 {isLoading ? "Setting up..." : "Continue as Faculty"}

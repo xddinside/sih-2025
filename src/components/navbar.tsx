@@ -3,13 +3,7 @@
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { ModeToggle } from "~/components/mode-toggle";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "~/components/ui/navigation-menu";
+
 import { Button } from "./ui/button";
 import { Authenticated, Unauthenticated } from "convex/react";
 
@@ -23,20 +17,12 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-foreground text-lg font-bold">SIH 2025</span>
           </Link>
-          <Button variant={"ghost"}>
-            <Link
-              href="/"
-            >
-              Home
-            </Link>
+          <Button variant={"ghost"} className="cursor-pointer">
+            <Link href="/">Home</Link>
           </Button>
           <Authenticated>
-            <Button variant={"ghost"}>
-              <Link
-                href="/dashboard"
-              >
-                Dashboard
-              </Link>
+            <Button variant={"ghost"} className="cursor-pointer">
+              <Link href="/dashboard">Dashboard</Link>
             </Button>
           </Authenticated>
         </div>

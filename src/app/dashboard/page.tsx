@@ -36,7 +36,7 @@ export default function DashboardPage() {
   // Sync user profile on load
   useEffect(() => {
     if (user && isSignedIn && !currentUser) {
-      syncUserProfile({
+      void syncUserProfile({
         clerkId: user.id,
         email: user.primaryEmailAddress?.emailAddress ?? "",
         name:
@@ -164,7 +164,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <p className="text-muted-foreground">
-                You haven't created any lectures yet.
+                You haven&apos;t created any lectures yet.
               </p>
             )}
           </div>

@@ -1,4 +1,5 @@
 "use client";
+import { Authenticated, Unauthenticated } from "convex/react";
 import Link from "next/link";
 import React from "react";
 
@@ -15,11 +16,20 @@ const HeroSection: React.FC = React.memo(() => {
             modern colleges.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4 lg:justify-start">
-            <Link href="/sign-up">
-              <button className="bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-primary/30 cursor-pointer rounded-lg px-8 py-3 font-semibold transition-all duration-200 hover:shadow-lg">
-                Get Started
-              </button>
-            </Link>
+            <Authenticated>
+              <Link href="/dashboard">
+                <button className="bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-primary/30 cursor-pointer rounded-lg px-8 py-3 font-semibold transition-all duration-200 hover:shadow-lg">
+                  Get Started
+                </button>
+              </Link>
+            </Authenticated>
+            <Unauthenticated>
+              <Link href="/sign-up">
+                <button className="bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-primary/30 cursor-pointer rounded-lg px-8 py-3 font-semibold transition-all duration-200 hover:shadow-lg">
+                  Get Started
+                </button>
+              </Link>
+            </Unauthenticated>
             <button className="border-border text-foreground hover:border-border/80 hover:bg-muted dark:hover:bg-muted/20 cursor-pointer rounded-lg border bg-transparent px-8 py-3 font-semibold transition-all duration-200">
               View Demo
             </button>
@@ -28,7 +38,7 @@ const HeroSection: React.FC = React.memo(() => {
       </div>
 
       {/* Dashboard Mockup */}
-      <div className="absolute top-1/2 right-0 -mr-16 hidden w-[45%] -translate-y-1/2 lg:block">
+      <div className="absolute top-1/2 right-0 -mr-16 hidden w-[45%] -translate-y-1/2 transition-transform duration-300 hover:translate-x-[-30px] hover:scale-105 lg:block">
         <div className="border-border/50 bg-card/60 shadow-primary/10 rounded-2xl border p-6 shadow-2xl backdrop-blur-sm">
           <div className="mb-6 flex items-center justify-between">
             <h3 className="text-foreground text-xl font-bold">Dashboard</h3>
