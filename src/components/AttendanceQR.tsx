@@ -105,7 +105,7 @@ export default function AttendanceQR({
         </div>
         <Button
           onClick={handleCreateSession}
-          className="w-full"
+          className="w-full cursor-pointer"
           disabled={isCreatingSession}
         >
           {isCreatingSession ? "Generating..." : "Generate QR Code"}
