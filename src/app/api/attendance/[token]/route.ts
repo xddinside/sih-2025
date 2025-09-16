@@ -8,16 +8,23 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ token: string }> },
+  { params }: { params: { token: string } },
 ) {
   try {
-    const { userId } = await auth();
+    const { userId, getToken } = await auth();
 
     if (!userId) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
-    const { token } = await params;
+    const convexToken = await getToken({ template: "convex" });
+
+    if (!convexToken) {
+      throw new Error("Failed to retrieve authentication token.");
+    }
+    convex.setAuth(convexToken);
+
+    const { token } = params;
 
     // Get client IP address
     const forwardedFor = request.headers.get("x-forwarded-for");
@@ -78,7 +85,9 @@ export async function GET(
         <body>
           <div class="container">
             <h1 class="warning">Session Expired</h1>
-            <p>The attendance session "${sessionInfo.sessionName}" has expired.</p>
+            <p>The attendance session "${
+              sessionInfo.sessionName
+            }" has expired.</p>
             <p>Please contact your instructor for assistance.</p>
             <a href="/" class="button">Go to Home</a>
           </div>
@@ -119,7 +128,9 @@ export async function GET(
             <h1 class="success">✅ Attendance Marked Successfully!</h1>
             <p><strong>${result.sessionName}</strong></p>
             <p>Your attendance has been recorded.</p>
-            <p class="info">Marked at: ${new Date(result.markedAt).toLocaleString()}</p>
+            <p class="info">Marked at: ${new Date(
+              result.markedAt,
+            ).toLocaleString()}</p>
             <a href="/" class="button">Go to Home</a>
           </div>
         </body>
