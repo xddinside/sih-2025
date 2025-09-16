@@ -14,3 +14,8 @@
 - [ ] handle students in db, generate attendance for the logged in student on scanning qr
 - [ ] on starting a session, store in db the lecture's starting time with its name
 - [ ] reload qr every 30 second with a new one, generating a new token that points to the same lecture
+- [ ] fix landing page ui
+    - the page is slightly scrolling horizontally, make it so that it doesn't
+    - improve the mock dashboard in the hero section
+        - extend it till the end of the page (so that it always gets cut off no matter the zoom)
+        - make sure that the weeks always align with the dots on the graph (no matter the zoom level)
