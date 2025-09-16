@@ -11,7 +11,7 @@
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "lint:ci": "SKIP_ENV_VALIDATION=true next lint"
+    "lint:ci": "SKIP_ENV_VALIDATION=true next lint",
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit"
