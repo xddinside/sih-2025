@@ -8,3 +8,7 @@
 - [x] setup clerk and convex.
 - [x] connect clerk with convex
 - [x] make the QR redirect on scan, to a unique session url with a token that'll run a convex mutation
+- [ ] fix the qr code generation
+- [ ] add ability of faculty to create lectures that get updated in the db
+- [ ] let faculty generate qr for each session
+- [ ] 

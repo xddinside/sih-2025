@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
@@ -9,6 +10,7 @@ import { Button } from "~/components/ui/button";
 
 export default function FacultyDashboard() {
   const { user, isLoaded } = useUser();
+  const router = useRouter();
   const [showQR, setShowQR] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [showPastSessions, setShowPastSessions] = useState(false);
@@ -35,10 +37,17 @@ export default function FacultyDashboard() {
         name:
           user.fullName ??
           `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
-        role: "faculty", // Default to faculty for dashboard access
+        // Don't set role here - let user choose
       });
     }
   }, [user, currentUser, syncUserProfile]);
+
+  // Redirect to role selection if user doesn't have a role
+  useEffect(() => {
+    if (currentUser && !currentUser.role) {
+      router.push("/role-selection");
+    }
+  }, [currentUser, router]);
 
   if (!isLoaded) {
     return (
@@ -56,12 +65,45 @@ export default function FacultyDashboard() {
     );
   }
 
+  // Show loading while checking user role
+  if (!currentUser) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
+          <p className="text-muted-foreground mt-2">Loading user profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user doesn't have a role, they should have been redirected
+  if (!currentUser.role) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
+          <p className="text-muted-foreground mt-2">
+            Redirecting to role selection...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold">Faculty Dashboard</h1>
+        <h1 className="mb-2 text-3xl font-bold">
+          {currentUser.role === "faculty"
+            ? "Faculty Dashboard"
+            : "Student Dashboard"}
+        </h1>
         <p className="text-muted-foreground">
-          Welcome back, {user.firstName}! Manage your attendance sessions below.
+          Welcome back, {user.firstName}!{" "}
+          {currentUser.role === "faculty"
+            ? "Manage your attendance sessions below."
+            : "View your attendance records and courses."}
         </p>
       </div>
 

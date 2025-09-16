@@ -30,12 +30,13 @@ export default defineSchema({
   users: defineTable({
     clerkId: v.string(), // Clerk user ID
     email: v.string(),
-    role: v.union(v.literal("student"), v.literal("faculty"), v.literal("admin")),
+    role: v.optional(
+      v.union(v.literal("student"), v.literal("faculty"), v.literal("admin")),
+    ),
     name: v.string(),
     studentId: v.optional(v.string()), // For students
     department: v.optional(v.string()),
-  })
-    .index("by_clerk_id", ["clerkId"]),
+  }).index("by_clerk_id", ["clerkId"]),
 
   // Courses
   courses: defineTable({
@@ -45,6 +46,5 @@ export default defineSchema({
     department: v.string(),
     semester: v.string(),
     academicYear: v.string(),
-  })
-    .index("by_faculty", ["facultyId"]),
+  }).index("by_faculty", ["facultyId"]),
 });

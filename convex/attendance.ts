@@ -262,10 +262,8 @@ export const syncUserProfile = mutation({
     clerkId: v.string(),
     email: v.string(),
     name: v.string(),
-    role: v.union(
-      v.literal("student"),
-      v.literal("faculty"),
-      v.literal("admin"),
+    role: v.optional(
+      v.union(v.literal("student"), v.literal("faculty"), v.literal("admin")),
     ),
     studentId: v.optional(v.string()),
     department: v.optional(v.string()),
@@ -279,24 +277,30 @@ export const syncUserProfile = mutation({
 
     if (existingUser) {
       // Update existing user
-      await ctx.db.patch(existingUser._id, {
+      const updateData: any = {
         email: args.email,
         name: args.name,
-        role: args.role,
         studentId: args.studentId,
         department: args.department,
-      });
+      };
+      if (args.role !== undefined) {
+        updateData.role = args.role;
+      }
+      await ctx.db.patch(existingUser._id, updateData);
       return existingUser._id;
     } else {
       // Create new user
-      const userId = await ctx.db.insert("users", {
+      const userData: any = {
         clerkId: args.clerkId,
         email: args.email,
         name: args.name,
-        role: args.role,
         studentId: args.studentId,
         department: args.department,
-      });
+      };
+      if (args.role !== undefined) {
+        userData.role = args.role;
+      }
+      const userId = await ctx.db.insert("users", userData);
       return userId;
     }
   },
@@ -316,5 +320,37 @@ export const getCurrentUser = query({
       .first();
 
     return user;
+  },
+});
+
+// Update user role
+export const updateUserRole = mutation({
+  args: {
+    role: v.union(
+      v.literal("student"),
+      v.literal("faculty"),
+      v.literal("admin"),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    await ctx.db.patch(user._id, {
+      role: args.role,
+    });
+
+    return { success: true };
   },
 });
