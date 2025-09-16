@@ -23,32 +23,22 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-foreground text-lg font-bold">SIH 2025</span>
           </Link>
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList className="space-x-1">
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/"
-                    className={`${navigationMenuTriggerStyle()} hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors`}
-                  >
-                    Home
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Authenticated>
-                    <Link
-                      href="/dashboard"
-                      className={`${navigationMenuTriggerStyle()} hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors`}
-                    >
-                      Dashboard
-                    </Link>
-                  </Authenticated>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          <Button variant={"ghost"}>
+            <Link
+              href="/"
+            >
+              Home
+            </Link>
+          </Button>
+          <Authenticated>
+            <Button variant={"ghost"}>
+              <Link
+                href="/dashboard"
+              >
+                Dashboard
+              </Link>
+            </Button>
+          </Authenticated>
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <div className="flex items-center gap-4 px-4 sm:px-6">

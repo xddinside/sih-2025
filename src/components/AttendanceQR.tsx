@@ -5,16 +5,17 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { Button } from "./ui/button";
+import type { Id } from "convex/_generated/dataModel"; // Import the Id type
 
 interface AttendanceQRProps {
   sessionName: string;
-  courseId: string;
+  lectureId: Id<"lectures">; // Use the specific Id type here
   durationMinutes?: number;
 }
 
 export default function AttendanceQR({
   sessionName,
-  courseId,
+  lectureId,
   durationMinutes = 15,
 }: AttendanceQRProps) {
   const { SVG } = useQRCode();
@@ -30,7 +31,7 @@ export default function AttendanceQR({
     try {
       const result = await createSession({
         sessionName,
-        courseId,
+        lectureId, // This will now be correctly typed
         durationMinutes,
       });
 
@@ -58,15 +59,15 @@ export default function AttendanceQR({
   if (!sessionData) {
     return (
       <div className="bg-card flex flex-col items-center space-y-4 rounded-lg border p-6">
-        <h2 className="text-xl font-semibold">Create Attendance Session</h2>
+        <h2 className="text-xl font-semibold">Start Attendance Session</h2>
         <div className="text-center">
-          <p className="text-muted-foreground mb-2">Session: {sessionName}</p>
+          <p className="text-muted-foreground mb-2">Lecture: {sessionName}</p>
           <p className="text-muted-foreground mb-4">
             Duration: {durationMinutes} minutes
           </p>
         </div>
-        <Button onClick={handleCreateSession} className="w-full">
-          Generate QR Code
+        <Button onClick={handleCreateSession} className="w-full" disabled={createSession.isLoading}>
+          {createSession.isLoading ? "Generating..." : "Generate QR Code"}
         </Button>
       </div>
     );

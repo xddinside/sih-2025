@@ -5,7 +5,7 @@ export default defineSchema({
   // Attendance sessions (created by faculty)
   attendanceSessions: defineTable({
     sessionName: v.string(), // e.g., "CS101 - Lecture 1"
-    courseId: v.string(),
+    lectureId: v.id("lectures"), // Replaced courseId with lectureId
     facultyId: v.string(), // Clerk user ID of the faculty member
     isActive: v.boolean(), // Whether students can still mark attendance
     createdAt: v.number(),
@@ -38,13 +38,11 @@ export default defineSchema({
     department: v.optional(v.string()),
   }).index("by_clerk_id", ["clerkId"]),
 
-  // Courses
-  courses: defineTable({
-    name: v.string(), // e.g., "Computer Science 101"
-    code: v.string(), // e.g., "CS101"
-    facultyId: v.string(), // Clerk user ID of the faculty
-    department: v.string(),
-    semester: v.string(),
-    academicYear: v.string(),
+  // Lectures for the faculty
+  lectures: defineTable({
+    name: v.string(),
+    facultyId: v.string(), // Clerk user ID of the faculty member
+    createdAt: v.number(),
   }).index("by_faculty", ["facultyId"]),
+
 });

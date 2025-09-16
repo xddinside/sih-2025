@@ -2,7 +2,6 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { ConvexError } from "convex/values";
 
-// Generate a cryptographically secure random token
 function generateSecureToken(): string {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -17,17 +16,15 @@ function generateSecureToken(): string {
 export const createAttendanceSession = mutation({
   args: {
     sessionName: v.string(),
-    courseId: v.string(),
-    durationMinutes: v.number(), // How long the session stays active
+    lectureId: v.id("lectures"), // Now requires a lectureId
+    durationMinutes: v.number(),
   },
   handler: async (ctx, args) => {
-    // Get the current user
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new ConvexError("Not authenticated");
     }
 
-    // Check if user is faculty (you'll need to implement this check)
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
@@ -43,7 +40,7 @@ export const createAttendanceSession = mutation({
 
     const sessionId = await ctx.db.insert("attendanceSessions", {
       sessionName: args.sessionName,
-      courseId: args.courseId,
+      lectureId: args.lectureId, // Storing lectureId
       facultyId: identity.subject,
       isActive: true,
       createdAt: now,
@@ -51,13 +48,57 @@ export const createAttendanceSession = mutation({
       token,
     });
 
-    return {
-      sessionId,
-      token,
-      expiresAt,
-    };
+    return { sessionId, token, expiresAt };
   },
 });
+
+// Create a new lecture
+export const createLecture = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!user || user.role !== "faculty") {
+      throw new ConvexError("Only faculty can create lectures.");
+    }
+
+    const lectureId = await ctx.db.insert("lectures", {
+      name: args.name,
+      facultyId: identity.subject,
+      createdAt: Date.now(),
+    });
+
+    return lectureId;
+  },
+});
+
+// Get all lectures for the logged-in faculty
+export const getAllLectures = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return [];
+    }
+
+    const lectures = await ctx.db
+      .query("lectures")
+      .withIndex("by_faculty", (q) => q.eq("facultyId", identity.subject))
+      .order("desc")
+      .collect();
+    return lectures;
+  },
+});
+
 
 // Mark attendance using token (Students)
 export const markAttendance = mutation({
@@ -149,7 +190,7 @@ export const getSessionInfo = query({
 
     return {
       sessionName: session.sessionName,
-      courseId: session.courseId,
+      lectureId: session.lectureId,
       isActive,
       expiresAt: session.expiresAt,
       remainingTime: Math.max(0, session.expiresAt - now),
@@ -183,22 +224,6 @@ export const getAttendanceRecords = query({
   },
 });
 
-// Get courses for a faculty member
-export const getFacultyCourses = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Not authenticated");
-    }
-
-    const courses = await ctx.db
-      .query("courses")
-      .withIndex("by_faculty", (q) => q.eq("facultyId", identity.subject))
-      .collect();
-
-    return courses;
-  },
-});
 
 // Get attendance sessions for a faculty member
 export const getFacultySessions = query({
@@ -218,43 +243,6 @@ export const getFacultySessions = query({
   },
 });
 
-// Create a new course
-export const createCourse = mutation({
-  args: {
-    name: v.string(),
-    code: v.string(),
-    department: v.string(),
-    semester: v.string(),
-    academicYear: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new ConvexError("Not authenticated");
-    }
-
-    // Check if user is faculty
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
-
-    if (!user || user.role !== "faculty") {
-      throw new ConvexError("Only faculty can create courses");
-    }
-
-    const courseId = await ctx.db.insert("courses", {
-      name: args.name,
-      code: args.code,
-      facultyId: identity.subject,
-      department: args.department,
-      semester: args.semester,
-      academicYear: args.academicYear,
-    });
-
-    return courseId;
-  },
-});
 
 // Sync user profile from Clerk
 export const syncUserProfile = mutation({
