@@ -64,3 +64,4 @@ export default function AttendanceStatusPage() {
     </Suspense>
   );
 }
+
