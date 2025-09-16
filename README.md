@@ -14,7 +14,7 @@
 - [x] handle students in db, generate attendance for the logged in student on scanning qr
 - [x] on starting a session, store in db the lecture's starting time with its name
 
-- [ ] reload qr every 30 second with a new one, generating a new token url that points to the same lecture
+- [x] reload qr every 30 second with a new one, generating a new token url that points to the same lecture
 
 - [ ] fix landing page ui
     - the page is slightly scrolling horizontally, make it so that it doesn't
