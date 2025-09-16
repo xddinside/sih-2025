@@ -10,94 +10,64 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { token: string } },
 ) {
+  // Helper function to build and return a redirect response
+  const redirect = (
+    status: "success" | "error" | "warning",
+    heading: string,
+    message: string,
+  ) => {
+    const url = request.nextUrl.clone();
+    url.pathname = "/attendance/status";
+    url.searchParams.set("status", status);
+    url.searchParams.set("heading", heading);
+    url.searchParams.set("message", message);
+    return NextResponse.redirect(url);
+  };
+
   try {
     const { userId, getToken } = await auth();
 
     if (!userId) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      const signInUrl = new URL("/sign-in", request.url);
+      signInUrl.searchParams.set("redirect_url", request.url);
+      return NextResponse.redirect(signInUrl);
     }
 
     const convexToken = await getToken({ template: "convex" });
 
+    // Handle cases where the token might not be available
     if (!convexToken) {
-      throw new Error("Failed to retrieve authentication token.");
+      return redirect(
+        "error",
+        "Authentication Error",
+        "Could not verify your identity. Please sign in and try again.",
+      );
     }
     convex.setAuth(convexToken);
 
     const { token } = params;
 
-    // Get client IP address
+    // Get IP address reliably from headers
     const forwardedFor = request.headers.get("x-forwarded-for");
-    const realIp = request.headers.get("x-real-ip");
-    const ipAddress = forwardedFor?.split(",")[0] ?? realIp ?? "unknown";
+    const ipAddress = forwardedFor?.split(",").shift()?.trim() ?? "unknown";
 
-    // First, get session info to check if it's valid
     const sessionInfo = await convex.query(api.attendance.getSessionInfo, {
       token,
     });
 
     if (!sessionInfo) {
-      return new NextResponse(
-        `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Invalid Session</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body { font-family: system-ui; text-align: center; padding: 2rem; background: #f5f5f5; }
-            .container { max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .error { color: #dc2626; }
-            .button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1 class="error">Invalid Attendance Session</h1>
-            <p>This attendance link is not valid or has been disabled.</p>
-            <a href="/" class="button">Go to Home</a>
-          </div>
-        </body>
-        </html>
-      `,
-        {
-          status: 404,
-          headers: { "Content-Type": "text/html" },
-        },
+      return redirect(
+        "error",
+        "Invalid Session",
+        "This attendance link is not valid or has been disabled.",
       );
     }
 
     if (!sessionInfo.isActive) {
-      return new NextResponse(
-        `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Session Expired</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body { font-family: system-ui; text-align: center; padding: 2rem; background: #f5f5f5; }
-            .container { max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .warning { color: #d97706; }
-            .button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1 class="warning">Session Expired</h1>
-            <p>The attendance session "${
-              sessionInfo.sessionName
-            }" has expired.</p>
-            <p>Please contact your instructor for assistance.</p>
-            <a href="/" class="button">Go to Home</a>
-          </div>
-        </body>
-        </html>
-      `,
-        {
-          status: 410,
-          headers: { "Content-Type": "text/html" },
-        },
+      return redirect(
+        "warning",
+        "Session Expired",
+        `The attendance session for "${sessionInfo.sessionName}" has ended. Please contact your instructor.`,
       );
     }
 
@@ -108,101 +78,29 @@ export async function GET(
         ipAddress,
       });
 
-      return new NextResponse(
-        `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Attendance Marked</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body { font-family: system-ui; text-align: center; padding: 2rem; background: #f5f5f5; }
-            .container { max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .success { color: #16a34a; }
-            .info { color: #6b7280; font-size: 0.875rem; margin-top: 1rem; }
-            .button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1 class="success">✅ Attendance Marked Successfully!</h1>
-            <p><strong>${result.sessionName}</strong></p>
-            <p>Your attendance has been recorded.</p>
-            <p class="info">Marked at: ${new Date(
-              result.markedAt,
-            ).toLocaleString()}</p>
-            <a href="/" class="button">Go to Home</a>
-          </div>
-        </body>
-        </html>
-      `,
-        {
-          headers: { "Content-Type": "text/html" },
-        },
+      return redirect(
+        "success",
+        "Attendance Marked!",
+        `Your attendance for <strong>${
+          result.sessionName
+        }</strong> has been recorded.<br><small>Marked at: ${new Date(
+          result.markedAt,
+        ).toLocaleString()}</small>`,
       );
     } catch (convexError: unknown) {
       const errorMessage =
         convexError instanceof Error
           ? convexError.message
           : "An error occurred while marking attendance.";
-      return new NextResponse(
-        `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Attendance Error</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body { font-family: system-ui; text-align: center; padding: 2rem; background: #f5f5f5; }
-            .container { max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-            .error { color: #dc2626; }
-            .button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1 class="error">❌ Unable to Mark Attendance</h1>
-            <p>${errorMessage}</p>
-            <a href="/" class="button">Go to Home</a>
-          </div>
-        </body>
-        </html>
-      `,
-        {
-          status: 400,
-          headers: { "Content-Type": "text/html" },
-        },
-      );
+
+      return redirect("error", "Unable to Mark Attendance", errorMessage);
     }
   } catch (error) {
-    console.error("Attendance marking error:", error);
-    return new NextResponse(
-      `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Server Error</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-          body { font-family: system-ui; text-align: center; padding: 2rem; background: #f5f5f5; }
-          .container { max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-          .error { color: #dc2626; }
-          .button { background: #2563eb; color: white; padding: 12px 24px; border: none; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h1 class="error">Server Error</h1>
-          <p>An unexpected error occurred. Please try again later.</p>
-          <a href="/" class="button">Go to Home</a>
-        </div>
-      </body>
-      </html>
-    `,
-      {
-        status: 500,
-        headers: { "Content-Type": "text/html" },
-      },
+    console.error("Critical attendance marking error:", error);
+    return redirect(
+      "error",
+      "Server Error",
+      "An unexpected server error occurred. Please try again later.",
     );
   }
 }
