@@ -1,7 +1,9 @@
 'use client';
 
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
-import { BarChart3, TrendingUp, Users, Calendar } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { BarChart3, TrendingUp, Users, Calendar, ArrowLeft } from "lucide-react";
 
 export default function AnalyticsPage() {
   // Mock data for demonstration
@@ -23,9 +25,17 @@ export default function AnalyticsPage() {
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Reports & Analytics</h1>
-          <p className="text-muted-foreground mt-2">View attendance patterns and student performance</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Reports & Analytics</h1>
+            <p className="text-muted-foreground mt-2">View attendance patterns and student performance</p>
+          </div>
+          <Button asChild variant="outline">
+            <Link href="/dashboard">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Link>
+          </Button>
         </div>
 
         {/* Key Metrics */}
@@ -120,16 +130,16 @@ export default function AnalyticsPage() {
                   { name: 'Michael Chen', attendance: '96%', grade: '11th' },
                   { name: 'Sarah Williams', attendance: '95%', grade: '10th' },
                 ].map((student, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{student.name}</p>
-                      <p className="text-sm text-muted-foreground">Grade {student.grade}</p>
+                    <div key={index} className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{student.name}</p>
+                        <p className="text-sm text-muted-foreground">Grade {student.grade}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium text-green-600">{student.attendance}</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium text-green-600">{student.attendance}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -146,15 +156,15 @@ export default function AnalyticsPage() {
                   { month: 'October', rate: '92%' },
                   { month: 'November', rate: '87%' },
                 ].map((month, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{month.month}</p>
+                    <div key={index} className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{month.month}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-medium">{month.rate}</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">{month.rate}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </CardContent>
           </Card>

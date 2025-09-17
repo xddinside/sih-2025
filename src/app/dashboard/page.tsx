@@ -19,9 +19,7 @@ import {
   TrendingUp,
   Clock,
   BarChart3,
-  GraduationCap,
   UserCheck,
-  FileText,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -62,6 +60,14 @@ export default function DashboardPage() {
       router.push("/role-selection");
     }
   }, [isLoaded, isSignedIn, currentUser, router]);
+
+  // Mock data for faculty dashboard
+  const facultyMockAnalytics = {
+    totalStudents: 150,
+    totalSessions: 45,
+    averageAttendance: "87%",
+    totalAttendanceRecords: 1245,
+  };
 
   if (!isLoaded || (isSignedIn && !currentUser)) {
     return (
@@ -106,10 +112,10 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {facultyAnalytics?.uniqueStudents || 0}
+                  {facultyMockAnalytics?.totalStudents}
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Unique students attended
+                  Enrolled this month
                 </p>
               </CardContent>
             </Card>
@@ -117,16 +123,16 @@ export default function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Today's Attendance
+                  Total Classes
                 </CardTitle>
                 <Calendar className="text-muted-foreground h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {facultyAnalytics?.totalSessions || 0}
+                  {facultyMockAnalytics?.totalSessions}
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Attendance sessions created
+                  This month
                 </p>
               </CardContent>
             </Card>
@@ -140,10 +146,10 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {facultyAnalytics?.averageAttendance || 0}
+                  {facultyMockAnalytics?.averageAttendance}
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Students per session
+                  +2.5% from last month
                 </p>
               </CardContent>
             </Card>
@@ -151,16 +157,16 @@ export default function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Active Sessions
+                  Attendance Marks
                 </CardTitle>
                 <Clock className="text-muted-foreground h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {facultyAnalytics?.totalAttendanceRecords || 0}
+                  {facultyMockAnalytics?.totalAttendanceRecords}
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Attendance marks recorded
+                  Recorded this month
                 </p>
               </CardContent>
             </Card>
@@ -176,20 +182,16 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button className="w-full justify-start" variant="outline">
+                <Button
+                  className="w-full justify-start cursor-pointer"
+                  variant="outline"
+                  onClick={() => router.push("/session")}
+                >
                   <UserCheck className="mr-2 h-4 w-4" />
                   Start Attendance Session
                 </Button>
                 <Button
-                  className="w-full justify-start"
-                  variant="outline"
-                  onClick={() => router.push("/analytics")}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  View Reports
-                </Button>
-                <Button
-                  className="w-full justify-start"
+                  className="w-full justify-start cursor-pointer"
                   variant="outline"
                   onClick={() => router.push("/analytics")}
                 >

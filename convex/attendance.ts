@@ -438,16 +438,29 @@ export const getFacultyAnalytics = query({
       .withIndex("by_faculty", (q) => q.eq("facultyId", identity.subject))
       .collect();
 
-    // Get all attendance records for these sessions
     const sessionIds = sessions.map((s) => s._id);
-    const allRecords = [];
-    for (const sessionId of sessionIds) {
-      const records = await ctx.db
-        .query("attendanceRecords")
-        .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
-        .collect();
-      allRecords.push(...records);
+
+    // If there are no sessions, return zeroed stats immediately
+    if (sessionIds.length === 0) {
+      return {
+        totalSessions: 0,
+        totalAttendanceRecords: 0,
+        uniqueStudents: 0,
+        averageAttendance: 0,
+      };
     }
+
+    // Fetch all attendance records for these sessions in parallel
+    const allRecords = (
+      await Promise.all(
+        sessionIds.map((sessionId) =>
+          ctx.db
+            .query("attendanceRecords")
+            .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
+            .collect(),
+        ),
+      )
+    ).flat();
 
     // Calculate statistics
     const totalSessions = sessions.length;
