@@ -60,12 +60,12 @@ const HeroSection: React.FC = React.memo(() => {
                 <defs>
                   <pattern
                     id="grid"
-                    width="32"
+                    width="40"
                     height="20"
                     patternUnits="userSpaceOnUse"
                   >
                     <path
-                      d="M 32 0 L 0 0 0 20"
+                      d="M 40 0 L 0 0 0 20"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="0.5"
@@ -224,70 +224,16 @@ const HeroSection: React.FC = React.memo(() => {
                   strokeWidth="1"
                   className="text-foreground"
                 />
-
-                {/* Fill area under the attendance line */}
-                <path
-                  d="M 0 75 L 40 65 L 80 55 L 120 45 L 160 35 L 200 25 L 240 40 L 280 20 L 320 30 L 320 100 L 0 100 Z"
-                  fill="currentColor"
-                  fillOpacity="0.1"
-                  className="text-foreground"
-                />
-
-                {/* Legend */}
-                <g transform="translate(10, 105)">
-                  <line
-                    x1="0"
-                    y1="0"
-                    x2="15"
-                    y2="0"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="square"
-                    className="text-foreground"
-                  />
-                  <text
-                    x="20"
-                    y="4"
-                    fontSize="10"
-                    fill="currentColor"
-                    className="text-foreground"
-                  >
-                    Present
-                  </text>
-                </g>
-                <g transform="translate(80, 105)">
-                  <line
-                    x1="0"
-                    y1="0"
-                    x2="15"
-                    y2="0"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeDasharray="3,3"
-                    strokeLinecap="square"
-                    opacity="0.7"
-                    className="text-foreground"
-                  />
-                  <text
-                    x="20"
-                    y="4"
-                    fontSize="10"
-                    fill="currentColor"
-                    className="text-foreground"
-                  >
-                    Expected
-                  </text>
-                </g>
+                {/* Week Labels */}
+                <text x="0" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 1</text>
+                <text x="40" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 2</text>
+                <text x="80" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 3</text>
+                <text x="120" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 4</text>
+                <text x="160" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 5</text>
+                <text x="200" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 6</text>
+                <text x="240" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 7</text>
+                <text x="280" y="115" textAnchor="middle" fontSize="10" fill="currentColor" className="text-muted-foreground">Week 8</text>
               </svg>
-            </div>
-            <div className="text-muted-foreground mt-2 flex justify-between px-2 text-xs">
-              <span>Week 1</span>
-              <span>Week 2</span>
-              <span>Week 3</span>
-              <span>Week 4</span>
-              <span>Week 5</span>
-              <span>Week 6</span>
-              <span>Week 7</span>
             </div>
           </div>
           <div className="mt-6 grid grid-cols-3 gap-4 text-center">

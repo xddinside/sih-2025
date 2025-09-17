@@ -58,6 +58,7 @@ export default function SessionPage() {
               </h2>
               <Button
                 variant="outline"
+                className="cursor-pointer"
                 onClick={() => setSessionLecture(null)}
               >
                 Close
