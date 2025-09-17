@@ -6,7 +6,7 @@ import StatsSection from "~/components/StatsSection";
 // Main Page Component
 export default function LandingPage() {
   return (
-    <div className="bg-background text-foreground font-sans">
+    <div className="bg-background text-foreground font-sans overflow-x-hidden">
       <main className="min-h-[calc(100vh-4rem)] pt-20 pb-32">
         <HeroSection />
 

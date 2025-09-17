@@ -13,18 +13,20 @@
 - [x] let faculty generate qr for each session
 - [x] handle students in db, generate attendance for the logged in student on scanning qr
 - [x] on starting a session, store in db the lecture's starting time with its name
-
 - [x] reload qr every 30 second with a new one, generating a new token url that points to the same lecture
 
+- [ ] integrate deepak's dashboard
+
 - [ ] fix landing page ui
-    - the page is slightly scrolling horizontally, make it so that it doesn't
     - improve the mock dashboard in the hero section
         - extend it till the end of the page (so that it always gets cut off no matter the zoom)
         - make sure that the weeks always align with the dots on the graph (no matter the zoom level)
 
-- [ ] change the current faculty dashbaord to a different /lecture route
+- [x] change the current faculty dashbaord to a different route
     - [ ] make the faculty dashboard show some graphs / analytics for the attendance of the students
 
 - [ ] improve the dashboard for the student
     - show a graph / chart that shows the attendance of the student in all the lectures
     - below the graph / chart, show the lectures attended with the dates like it is now
+
+- [ ] make ui responsive (if needed)

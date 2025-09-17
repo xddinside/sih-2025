@@ -7,6 +7,7 @@ import { ThemeProvider } from "~/components/theme-provider";
 import { Navbar } from "~/components/navbar";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { shadcn } from "@clerk/themes"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -24,7 +25,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
-      <body>
+      <body className="overflow-x-hidden">
         <ClerkProvider appearance={{baseTheme: shadcn,}}>
           <ConvexClientProvider>
             <ThemeProvider
@@ -33,6 +34,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <SpeedInsights />
               <Navbar />
               {children}
             </ThemeProvider>

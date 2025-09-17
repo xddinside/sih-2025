@@ -5,10 +5,15 @@ import Link from "next/link";
 import { ModeToggle } from "~/components/mode-toggle";
 
 import { Button } from "./ui/button";
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 
 export function Navbar() {
-  useUser();
+  const { isSignedIn } = useUser();
+  const currentUser = useQuery(
+    api.attendance.getCurrentUser,
+    isSignedIn ? undefined : "skip",
+  );
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-border/40 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
@@ -24,6 +29,11 @@ export function Navbar() {
             <Button variant={"ghost"} className="cursor-pointer">
               <Link href="/dashboard">Dashboard</Link>
             </Button>
+            {currentUser?.role === "faculty" && (
+              <Button variant={"ghost"} className="cursor-pointer">
+                <Link href="/session">Your Sessions</Link>
+              </Button>
+            )}
           </Authenticated>
         </div>
         <div className="ml-auto flex items-center space-x-4">
