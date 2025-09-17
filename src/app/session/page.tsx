@@ -53,9 +53,7 @@ export default function SessionPage() {
         {sessionLecture && (
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold">
-                Current Attendance Session
-              </h2>
+              <h2 className="text-2xl font-bold">Current Attendance Session</h2>
               <Button
                 variant="outline"
                 className="cursor-pointer"

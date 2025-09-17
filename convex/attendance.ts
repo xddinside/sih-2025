@@ -414,3 +414,54 @@ export const getStudentAttendance = query({
     return recordsWithSessionInfo.sort((a, b) => b.markedAt - a.markedAt);
   },
 });
+
+// Get analytics data for faculty
+export const getFacultyAnalytics = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return null;
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!user || user.role !== "faculty") {
+      return null;
+    }
+
+    // Get all sessions for this faculty
+    const sessions = await ctx.db
+      .query("attendanceSessions")
+      .withIndex("by_faculty", (q) => q.eq("facultyId", identity.subject))
+      .collect();
+
+    // Get all attendance records for these sessions
+    const sessionIds = sessions.map((s) => s._id);
+    const allRecords = [];
+    for (const sessionId of sessionIds) {
+      const records = await ctx.db
+        .query("attendanceRecords")
+        .withIndex("by_session", (q) => q.eq("sessionId", sessionId))
+        .collect();
+      allRecords.push(...records);
+    }
+
+    // Calculate statistics
+    const totalSessions = sessions.length;
+    const totalAttendanceRecords = allRecords.length;
+    const uniqueStudents = new Set(allRecords.map((r) => r.studentId)).size;
+
+    return {
+      totalSessions,
+      totalAttendanceRecords,
+      uniqueStudents,
+      averageAttendance:
+        totalSessions > 0
+          ? Math.round((totalAttendanceRecords / totalSessions) * 100) / 100
+          : 0,
+    };
+  },
+});

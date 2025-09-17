@@ -1,10 +1,28 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import {
+  Users,
+  Calendar,
+  TrendingUp,
+  Clock,
+  BarChart3,
+  GraduationCap,
+  UserCheck,
+  FileText,
+} from "lucide-react";
 
 export default function DashboardPage() {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -19,6 +37,10 @@ export default function DashboardPage() {
     api.attendance.getStudentAttendance,
     isSignedIn && currentUser?.role === "student" ? undefined : "skip",
   );
+  const facultyAnalytics = useQuery(
+    api.attendance.getFacultyAnalytics,
+    isSignedIn && currentUser?.role === "faculty" ? undefined : "skip",
+  );
   const syncUserProfile = useMutation(api.attendance.syncUserProfile);
 
   // Sync user profile on load
@@ -28,7 +50,7 @@ export default function DashboardPage() {
         clerkId: user.id,
         email: user.primaryEmailAddress?.emailAddress ?? "",
         name:
-        user.fullName ??
+          user.fullName ??
           `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
       });
     }
@@ -63,12 +85,165 @@ export default function DashboardPage() {
       </div>
 
       {currentUser?.role === "faculty" && (
-        <div>
-          <h2 className="mb-4 text-2xl font-bold">Faculty Analytics</h2>
-          <div className="bg-card rounded-lg border p-6">
-            <p className="text-muted-foreground">
-              Analytics and reports for your lectures will be displayed here.
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-foreground text-2xl font-bold">
+              Faculty Dashboard
+            </h2>
+            <p className="text-muted-foreground mt-2">
+              Welcome to SIH 2025 - Manage your classroom attendance efficiently
             </p>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Students
+                </CardTitle>
+                <Users className="text-muted-foreground h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {facultyAnalytics?.uniqueStudents || 0}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Unique students attended
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Today's Attendance
+                </CardTitle>
+                <Calendar className="text-muted-foreground h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {facultyAnalytics?.totalSessions || 0}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Attendance sessions created
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Average Attendance
+                </CardTitle>
+                <TrendingUp className="text-muted-foreground h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {facultyAnalytics?.averageAttendance || 0}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Students per session
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Active Sessions
+                </CardTitle>
+                <Clock className="text-muted-foreground h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {facultyAnalytics?.totalAttendanceRecords || 0}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Attendance marks recorded
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>
+                  Common tasks to get you started
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button className="w-full justify-start" variant="outline">
+                  <UserCheck className="mr-2 h-4 w-4" />
+                  Start Attendance Session
+                </Button>
+                <Button
+                  className="w-full justify-start"
+                  variant="outline"
+                  onClick={() => router.push("/analytics")}
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  View Reports
+                </Button>
+                <Button
+                  className="w-full justify-start"
+                  variant="outline"
+                  onClick={() => router.push("/analytics")}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  Analytics Dashboard
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>Latest attendance sessions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    {
+                      subject: "Data Structures",
+                      time: "10:00 AM",
+                      attendance: "28/30",
+                    },
+                    {
+                      subject: "Algorithms",
+                      time: "2:00 PM",
+                      attendance: "25/30",
+                    },
+                    {
+                      subject: "Database Systems",
+                      time: "4:00 PM",
+                      attendance: "27/30",
+                    },
+                  ].map((session, index) => (
+                    <div
+                      key={index}
+                      className="bg-muted/50 flex items-center justify-between rounded-lg p-3"
+                    >
+                      <div>
+                        <p className="text-sm font-medium">{session.subject}</p>
+                        <p className="text-muted-foreground text-xs">
+                          {session.time}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium">
+                          {session.attendance}
+                        </p>
+                        <p className="text-muted-foreground text-xs">present</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       )}
