@@ -20,7 +20,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-4 lg:space-x-6">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-foreground text-lg font-bold">SIH 2025</span>
+            <span className="text-foreground text-lg font-bold">Attendly</span>
           </Link>
           <Button variant={"ghost"} className="cursor-pointer">
             <Link href="/">Home</Link>
