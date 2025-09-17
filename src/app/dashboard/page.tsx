@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { useQuery, useMutation } from "convex/react";
@@ -35,6 +35,7 @@ export default function DashboardPage() {
     api.attendance.getStudentAttendance,
     isSignedIn && currentUser?.role === "student" ? undefined : "skip",
   );
+  // This query is kept for potential future use, though mock data is used for display
   const facultyAnalytics = useQuery(
     api.attendance.getFacultyAnalytics,
     isSignedIn && currentUser?.role === "faculty" ? undefined : "skip",
@@ -131,9 +132,7 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold">
                   {facultyMockAnalytics?.totalSessions}
                 </div>
-                <p className="text-muted-foreground text-xs">
-                  This month
-                </p>
+                <p className="text-muted-foreground text-xs">This month</p>
               </CardContent>
             </Card>
 
@@ -183,7 +182,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button
-                  className="w-full justify-start cursor-pointer"
+                  className="w-full justify-start"
                   variant="outline"
                   onClick={() => router.push("/session")}
                 >
@@ -191,7 +190,7 @@ export default function DashboardPage() {
                   Start Attendance Session
                 </Button>
                 <Button
-                  className="w-full justify-start cursor-pointer"
+                  className="w-full justify-start"
                   variant="outline"
                   onClick={() => router.push("/analytics")}
                 >
