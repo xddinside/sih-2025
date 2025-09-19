@@ -21,6 +21,7 @@ import {
   BarChart3,
   UserCheck,
 } from "lucide-react";
+import AttendanceChart from "~/components/AttendanceChart";
 
 export default function DashboardPage() {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -35,11 +36,7 @@ export default function DashboardPage() {
     api.attendance.getStudentAttendance,
     isSignedIn && currentUser?.role === "student" ? undefined : "skip",
   );
-  // This query is kept for potential future use, though mock data is used for display
-  const facultyAnalytics = useQuery(
-    api.attendance.getFacultyAnalytics,
-    isSignedIn && currentUser?.role === "faculty" ? undefined : "skip",
-  );
+
   const syncUserProfile = useMutation(api.attendance.syncUserProfile);
 
   // Sync user profile on load
@@ -250,8 +247,15 @@ export default function DashboardPage() {
       )}
 
       {currentUser?.role === "student" && (
-        <div>
-          <h2 className="mb-4 text-2xl font-bold">Your Attendance</h2>
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold">Your Attendance</h2>
+
+          {/* Attendance Chart */}
+          {studentAttendance && (
+            <AttendanceChart attendanceData={studentAttendance} />
+          )}
+
+          {/* Attendance Table */}
           {studentAttendance && studentAttendance.length > 0 ? (
             <div className="bg-card rounded-lg border">
               <table className="w-full text-left">
